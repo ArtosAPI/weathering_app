@@ -3,5 +3,7 @@ import 'StartScreen.dart';
 import 'MainScreen.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: MainScreen()));
+  
+  // debugPrint(w.country);
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: MainScreen()));
 }

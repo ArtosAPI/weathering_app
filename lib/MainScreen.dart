@@ -1,6 +1,9 @@
-import 'dart:ui';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:weather/weather.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 const TextStyle defTextStyle = TextStyle(
@@ -10,138 +13,22 @@ const TextStyle defTextStyle = TextStyle(
   color: Colors.black,
 );
 
+final String _todayDate =
+    '${DateFormat('EEEE').format(DateTime.now())}, ${DateTime.now().day} ${DateFormat('MMMM').format(DateTime.now())}';
+
 class MainScreen extends StatelessWidget {
-  MainScreen({super.key});
-
-  final GlobalKey<ScaffoldState> _scaffKey = GlobalKey();
-  String _goodWHAT = "Good Evening";
-
-  @override
-  void initState() {
-    switch (DateTime.now().hour) {
-      case >= 6 && < 12:
-        _goodWHAT = 'Good morning ';
-      case >= 12 && < 18:
-        _goodWHAT = 'Good day';
-      case >= 18 && < 23:
-        _goodWHAT = 'Good evening';
-      case >= 23 || < 5:
-        _goodWHAT = 'Good night';
-    }
-  }
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffKey,
-      appBar: TopBar(
-        goodWHAT: _goodWHAT,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color.fromRGBO(218, 226, 237, 1), Colors.white])),
-      ),
-    );
-  }
-}
-
-//App bar widget
-class TopBar extends StatefulWidget implements PreferredSizeWidget {
-  TopBar({
-    super.key,
-    this.goodWHAT = "Good Evening",
-    this.preferredSize = const Size.fromHeight(100), //needed
-  });
-  String goodWHAT = "";
-
-  @override
-  final Size preferredSize; //needed
-
-  @override
-  State<TopBar> createState() => _TopBarState();
-}
-
-class _TopBarState extends State<TopBar> {
-  String todayDate =
-      '${DateFormat('EEEE').format(DateTime.now())}, ${DateTime.now().day} ${DateFormat('MMMM').format(DateTime.now())}';
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      toolbarHeight: 80,
-      backgroundColor: null,
-      elevation: 0,
-      leadingWidth: 180,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color.fromRGBO(201, 213, 229, 1), Color.fromRGBO(218, 226, 237, 1)],
-          ),
-        ),
-      ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 30, top: 23),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.goodWHAT,
-              style: defTextStyle,
-            ),
-            Text(
-              todayDate,
-              style: const TextStyle(
-                fontFamily: 'Rubik',
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: Colors.black,
-              ),
-            )
-          ],
-        ),
-      ),
-      actions: [
-        Column(children: [
-          const Gap(18),
-          IconButton.outlined(
-              icon: const Icon(Icons.menu,
-                  color: Color.fromARGB(255, 184, 184, 184)),
-              iconSize: 24,
-              style: ButtonStyle(
-                fixedSize: MaterialStateProperty.all(const Size.square(40)),
-                side: MaterialStateProperty.all(const BorderSide(
-                    color: Color.fromARGB(255, 184, 184, 184))),
-              ),
-              onPressed: () {
-                // BottomModalDrawer(context);
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) {
-                    return const BottomModalDrawer();
-                  },
-                );
-              }),
-        ]),
-        const Gap(30),
-      ],
-    );
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false, home: Scaffold(body: MainPage()));
   }
 }
 
 class BottomModalDrawer extends StatelessWidget {
   const BottomModalDrawer({super.key});
-  static const TextStyle _defNormalTextStyle = TextStyle(
-    fontSize: 14,
-    fontFamily: 'Rubik',
-    fontWeight: FontWeight.w400,
-  );
+
   static const _weatherDescriprion =
       'The weather forecast for today is mostly sunny with a mild temperature drop. The high will be around 25°C and the low will be around 19°C. A slight chance of rain is expected in the afternoon';
 
@@ -268,6 +155,134 @@ class BottomModalDrawer extends StatelessWidget {
           ),
         ]),
       ),
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  String _wishes = 'Good morning';
+
+  String _currCityName = '';
+  String _currTemp = '';
+  String _currWeather = '';
+  String _currWindSpeed = '';
+  String _currHumidity = '';
+  String _currPressure = '';
+
+  final WeatherFactory wf = WeatherFactory('b2c5701873d4ef4129e96535c72d9c25');
+  Weather? w;
+
+  Future<void> fetchWeatherData() async {
+    LocationPermission locationPermission =
+        await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition();
+    Weather w = await wf.currentWeatherByLocation(
+        position.latitude, position.longitude);
+    setState(() {
+      //TODO: get a city name to display!
+      _currCityName = '';
+      _currTemp = w.temperature!.celsius!.toStringAsFixed(1);
+      _currWeather = w.weatherDescription!;
+      _currWindSpeed = w.windSpeed!.toString();
+      _currHumidity = w.humidity!.toString();
+      _currPressure = w.pressure!.toString();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWeatherData();
+    switch (DateTime.now().hour) {
+      case >= 6 && < 12:
+        _wishes = 'Good morning ';
+      case >= 12 && < 18:
+        _wishes = 'Good day';
+      case >= 18 && < 23:
+        _wishes = 'Good evening';
+      case >= 23 || < 5:
+        _wishes = 'Good night';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color.fromRGBO(201, 213, 229, 1), Colors.white])),
+      child: Stack(children: [
+        Positioned(top: 55, child: Image.asset('images/sky.png')),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Image.asset(
+            'images/sun.png',
+            height: 525,
+          ),
+        ),
+        ListView(children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _wishes,
+                      style: defTextStyle,
+                    ),
+                    const Gap(3),
+                    Text(
+                      _todayDate,
+                      style: const TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    )
+                  ],
+                ),
+                IconButton.outlined(
+                    icon: const Icon(Icons.menu,
+                        color: Color.fromARGB(255, 184, 184, 184)),
+                    iconSize: 24,
+                    style: ButtonStyle(
+                      fixedSize:
+                          MaterialStateProperty.all(const Size.square(40)),
+                      side: MaterialStateProperty.all(const BorderSide(
+                          color: Color.fromARGB(255, 184, 184, 184))),
+                    ),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) {
+                          return const BottomModalDrawer();
+                        },
+                      );
+                    }),
+              ],
+            ),
+          ),
+          Container(
+            child: Column(children: [Text(_currPressure)]),
+          )
+        ]),
+      ]),
     );
   }
 }
