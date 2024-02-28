@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'StartScreen.dart';
-import 'MainScreen.dart';
+import 'src/views/view.dart';
 
 void main() {
-  
-  // debugPrint(w.country);
-  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: MainScreen()));
+  runApp(const MainScreen());
 }
