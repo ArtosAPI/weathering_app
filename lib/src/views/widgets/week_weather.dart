@@ -1,3 +1,4 @@
+import 'package:artums/src/constants.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
@@ -55,6 +56,30 @@ class DailyForecast extends StatelessWidget {
 
   const DailyForecast({super.key, required this.dayWeather});
 
+  IconData getWeatherIcon(int weatherCondCode) {
+    switch (weatherCondCode) {
+      case >= 200 && < 300:
+        return weatherIcons[WeatherConditions.thunderstorm.index];
+      case >= 300 && < 400:
+        return weatherIcons[WeatherConditions.drizzle.index];
+      case >= 500 && < 600:
+        return weatherIcons[WeatherConditions.rain.index];
+      case >= 600 && < 700:
+        return weatherIcons[WeatherConditions.snow.index];
+      case >= 700 && < 800:
+        return weatherIcons[WeatherConditions.fog.index];
+      case == 800:
+        return weatherIcons[WeatherConditions.sunny.index];
+      case == 801:
+        return weatherIcons[WeatherConditions.partlyCloudy.index];
+      case >= 802:
+        return weatherIcons[WeatherConditions.cloudy.index];
+
+      default:
+        return weatherIcons[WeatherConditions.sunny.index];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,11 +87,11 @@ class DailyForecast extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 48,
-            backgroundColor: Color.fromRGBO(210, 226, 246, 1),
+            backgroundColor: const Color.fromRGBO(210, 226, 246, 1),
             child: Icon(
-              Icons.cloud,
+              getWeatherIcon(dayWeather.weatherConditionCode!),
               size: 48,
             ),
           ),

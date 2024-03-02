@@ -1,8 +1,7 @@
+import 'package:artums/src/bloc/weather_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:weather/weather.dart';
-import 'package:geolocator/geolocator.dart';
 import 'widgets/widgets.dart';
 
 const TextStyle defTextStyle = TextStyle(
@@ -32,49 +31,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String _dayTime = 'Good morning';
 
-  String _currCityName = '';
-  String _currTemp = '';
-  String _currWeather = '';
-  String _currWindSpeed = '0';
-  String _currHumidity = '';
-  String _currPressure = '';
-
-  final WeatherFactory wf = WeatherFactory('b2c5701873d4ef4129e96535c72d9c25');
-  List<Weather> _weekW = List.empty(growable: true);
-
-  Future fetchWeatherData() async {
-    Weather w;
-    List<Weather> weekW;
-
-    await Geolocator.requestPermission();
-
-    Position position = await Geolocator.getCurrentPosition();
-
-    w = await wf.currentWeatherByLocation(
-        position.latitude, position.longitude);
-    weekW = await wf.fiveDayForecastByLocation(
-        position.latitude, position.longitude);
-
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-
-    setState(() {
-      _weekW = weekW;
-
-      _currCityName = placemarks[0].locality.toString();
-      _currTemp = '${w.temperature!.celsius!.toStringAsFixed(0)}°C';
-
-      _currWeather = w.weatherDescription!;
-      _currWeather = _currWeather[0].toUpperCase() +
-          _currWeather.replaceFirst(_currWeather[0], '');
-
-      _currWindSpeed = w.windSpeed!.toString();
-      _currHumidity = '${w.humidity!}%';
-      _currPressure = w.pressure!.toString();
-    });
-  }
-
-  void dayTime() {
+  //TODO: implement in bloc
+  void currentDayTime() {
     switch (DateTime.now().hour) {
       case >= 6 && < 12:
         setState(() {
@@ -100,8 +58,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    fetchWeatherData();
-    dayTime();
+
+    currentDayTime();
   }
 
   @override
@@ -129,41 +87,60 @@ class _MainPageState extends State<MainPage> {
             const Gap(45),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(children: [
-                Text(
-                  _currCityName,
-                  style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                  ),
+              child: BlocProvider(
+                create: (context) => WeatherBloc()..add(FetchLocation()),
+                child: BlocBuilder<WeatherBloc, WeatherState>(
+                  builder: (context, state) {
+                    if (state is LocationFetched) {
+                      context
+                          .read<WeatherBloc>()
+                          .add(FetchWeather(state.latitude, state.longitude));
+                    } else if (state is WeatherFetched) {
+                      final weather = state.weather;
+                      return Column(children: [
+                        Text(
+                          weather[0].areaName!,
+                          style: const TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          '${weather[0].temperature!.celsius!.round()}°C',
+                          style: const TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 96,
+                            fontWeight: FontWeight.w800,
+                            height: 1,
+                          ),
+                        ),
+                        Text(
+                          weather[0].weatherDescription!,
+                          style: const TextStyle(
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const Gap(40),
+                        AtmosCondition(
+                          currWindSpeed: weather[0].windSpeed!,
+                          currHumidity: '${weather[0].humidity}%',
+                          currPressure: weather[0].pressure.toString(),
+                        ),
+                        const Gap(25),
+                        WeekWeather(weekWeather: weather),
+                      ]);
+                    }
+                    return const Center(
+                        child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()));
+                  },
                 ),
-                Text(
-                  _currTemp,
-                  style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 96,
-                    fontWeight: FontWeight.w800,
-                    height: 1,
-                  ),
-                ),
-                Text(
-                  _currWeather,
-                  style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Gap(40),
-                AtmosCondition(
-                  currWindSpeed: double.parse(_currWindSpeed),
-                  currHumidity: _currHumidity,
-                  currPressure: _currPressure,
-                ),
-                const Gap(25),
-                WeekWeather(weekWeather: _weekW),
-              ]),
+              ),
             ),
           ]),
         ]));

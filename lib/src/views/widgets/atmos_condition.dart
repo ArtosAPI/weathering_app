@@ -54,8 +54,7 @@ class _AtmosConditionState extends State<AtmosCondition> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
       ),
-      child: !widget.isDataFetched
-          ? Row(
+      child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AtmosData(
@@ -112,9 +111,6 @@ class _AtmosConditionState extends State<AtmosCondition> {
                 )
               ],
             )
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
     );
   }
 }
