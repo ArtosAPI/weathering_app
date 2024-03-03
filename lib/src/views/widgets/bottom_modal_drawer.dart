@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import '/src/constants.dart';
 
 class BottomModalDrawer extends StatelessWidget {
   const BottomModalDrawer({super.key});
-
-  static const _weatherDescriprion =
-      'The weather forecast for today is mostly sunny with a mild temperature drop. The high will be around 25°C and the low will be around 19°C. A slight chance of rain is expected in the afternoon';
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +120,7 @@ class BottomModalDrawer extends StatelessWidget {
                     Color.fromRGBO(250, 251, 254, 1),
                   ],
                 )),
-            child: const Text(_weatherDescriprion),
+            child: const Text(weatherDescriprion),
           ),
           const SizedBox(
             height: 16,

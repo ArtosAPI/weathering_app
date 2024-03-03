@@ -2,64 +2,25 @@ import 'package:artums/src/bloc/weather_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'widgets/widgets.dart';
+import '../widgets/widgets.dart';
 
-const TextStyle defTextStyle = TextStyle(
-  fontFamily: 'Rubik',
-  fontSize: 16,
-  fontWeight: FontWeight.w600,
-  color: Colors.black,
-);
-
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: Scaffold(body: MainPage()));
-  }
-}
-
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  String _dayTime = 'Good morning';
-
-  //TODO: implement in bloc
-  void currentDayTime() {
+  String currentDayTime() {
     switch (DateTime.now().hour) {
       case >= 6 && < 12:
-        setState(() {
-          _dayTime = 'Good morning ';
-        });
+        return 'Good morning ';
       case >= 12 && < 18:
-        setState(() {
-          _dayTime = 'Good day';
-        });
-
+        return 'Good day';
       case >= 18 && < 23:
-        setState(() {
-          _dayTime = 'Good evening';
-        });
-
+        return 'Good evening';
       case >= 23 || < 5:
-        setState(() {
-          _dayTime = 'Good night';
-        });
+        return 'Good night';
+
+      default:
+        return 'Good day';
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    currentDayTime();
   }
 
   @override
@@ -71,18 +32,18 @@ class _MainPageState extends State<MainPage> {
                 end: Alignment.bottomCenter,
                 colors: [Color.fromRGBO(201, 213, 229, 1), Colors.white])),
         child: Stack(children: [
-          Positioned(top: 55, child: Image.asset('images/sky.png')),
+          Positioned(top: 55, child: Image.asset('assets/images/sky.png')),
           Align(
             alignment: Alignment.centerRight,
             child: Image.asset(
-              'images/sun.png',
+              'assets/images/sun.png',
               height: 525,
             ),
           ),
           ListView(children: [
             Padding(
               padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-              child: TopBar(dayTime: _dayTime),
+              child: TopBar(dayTime: currentDayTime()),
             ),
             const Gap(45),
             Padding(
@@ -132,13 +93,13 @@ class _MainPageState extends State<MainPage> {
                         const Gap(25),
                         WeekWeather(weekWeather: weather),
                       ]);
-                    }
+                    } 
                     return const Center(
-                        child: SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator()));
-                  },
+                          child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator()));
+                    }
                 ),
               ),
             ),

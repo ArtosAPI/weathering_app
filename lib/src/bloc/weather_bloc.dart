@@ -12,7 +12,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     on<FetchLocation>((event, emit) async {
       await Geolocator.requestPermission();
-      await Geolocator.getCurrentPosition().then((value) => emit(LocationFetched(value.latitude, value.longitude)));
+      await Geolocator.getCurrentPosition(forceAndroidLocationManager: true).then((value) => emit(LocationFetched(value.latitude, value.longitude)));
     });
 
     on<FetchWeather>((event, emit) async {

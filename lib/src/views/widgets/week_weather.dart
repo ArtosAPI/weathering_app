@@ -8,9 +8,9 @@ const TextStyle _defTextStyle = TextStyle(
     color: Color.fromRGBO(142, 142, 142, 1), fontFamily: 'Rubik', fontSize: 14);
 
 class WeekWeather extends StatelessWidget {
-  final List<Weather> weekWeather;
-
   const WeekWeather({super.key, required this.weekWeather});
+
+  final List<Weather> weekWeather;
 
   @override
   Widget build(BuildContext context) {
@@ -19,42 +19,40 @@ class WeekWeather extends StatelessWidget {
       decoration: BoxDecoration(
           color: const Color.fromRGBO(255, 255, 255, 0.81),
           borderRadius: BorderRadius.circular(24)),
-      child: weekWeather.isNotEmpty
-          ? Column(
-              children: [
-                const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Next days',
-                      style: _defTextStyle,
-                    )),
-                DailyForecast(
-                  dayWeather: weekWeather[7],
-                ),
-                DailyForecast(
-                  dayWeather: weekWeather[15],
-                ),
-                DailyForecast(
-                  dayWeather: weekWeather[23],
-                ),
-                DailyForecast(
-                  dayWeather: weekWeather[31],
-                ),
-                DailyForecast(
-                  dayWeather: weekWeather[39],
-                ),
-                const Gap(16),
-              ],
-            )
-          : const Center(child: CircularProgressIndicator()),
+      child: Column(
+        children: [
+          const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Next days',
+                style: _defTextStyle,
+              )),
+          DailyForecast(
+            dayWeather: weekWeather[4],
+          ),
+          DailyForecast(
+            dayWeather: weekWeather[12],
+          ),
+          DailyForecast(
+            dayWeather: weekWeather[20],
+          ),
+          DailyForecast(
+            dayWeather: weekWeather[28],
+          ),
+          DailyForecast(
+            dayWeather: weekWeather[36],
+          ),
+          const Gap(16),
+        ],
+      ),
     );
   }
 }
 
 class DailyForecast extends StatelessWidget {
-  final Weather dayWeather;
-
   const DailyForecast({super.key, required this.dayWeather});
+
+  final Weather dayWeather;
 
   IconData getWeatherIcon(int weatherCondCode) {
     switch (weatherCondCode) {

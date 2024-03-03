@@ -1,19 +1,19 @@
-import 'package:artums/src/views/main_screen.dart';
-import 'package:artums/src/views/bottom_modal_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import '/src/constants.dart';
+import 'bottom_modal_drawer.dart';
 
 class TopBar extends StatelessWidget {
-  final String _todayDate =
-    '${DateFormat('EEEE').format(DateTime.now())}, ${DateTime.now().day} ${DateFormat('MMMM').format(DateTime.now())}';
-
   TopBar({
     super.key,
-    required String dayTime,
-  }) : _dayTime = dayTime;
+    required this.dayTime,
+  });
 
-  final String _dayTime;
+  final String _todayDate =
+      '${DateFormat('EEEE').format(DateTime.now())}, ${DateTime.now().day} ${DateFormat('MMMM').format(DateTime.now())}';
+
+  final String dayTime;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class TopBar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _dayTime,
+              dayTime,
               style: defTextStyle,
             ),
             const Gap(3),
@@ -45,10 +45,9 @@ class TopBar extends StatelessWidget {
                 color: Color.fromARGB(255, 184, 184, 184)),
             iconSize: 24,
             style: ButtonStyle(
-              fixedSize:
-                  MaterialStateProperty.all(const Size.square(40)),
-              side: MaterialStateProperty.all(const BorderSide(
-                  color: Color.fromARGB(255, 184, 184, 184))),
+              fixedSize: MaterialStateProperty.all(const Size.square(40)),
+              side: MaterialStateProperty.all(
+                  const BorderSide(color: Color.fromARGB(255, 184, 184, 184))),
             ),
             onPressed: () {
               showModalBottomSheet(

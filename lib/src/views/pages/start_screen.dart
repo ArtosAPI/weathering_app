@@ -15,7 +15,7 @@ class StartScreen extends StatelessWidget {
       child: Scaffold(
           body: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(image: AssetImage('images/Group 1.png')),
+            image: DecorationImage(image: AssetImage('assets/images/Group 1.png')),
             gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -26,13 +26,13 @@ class StartScreen extends StatelessWidget {
         child: Column(children: [
           Align(
               alignment: Alignment.centerLeft,
-              child: SafeArea(child: Image.asset('images/Group Sun.png'))),
+              child: SafeArea(child: Image.asset('assets/images/Group Sun.png'))),
           Stack(
             children: [
               Container(
                   padding: const EdgeInsets.only(bottom: 50),
                   alignment: Alignment.bottomRight,
-                  child: Image.asset('images/Vector.png')),
+                  child: Image.asset('assets/images/Vector.png')),
               const Positioned(
                 top: 70,
                 left: 20,
