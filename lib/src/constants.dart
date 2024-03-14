@@ -38,3 +38,5 @@ const TextStyle defTextStyle = TextStyle(
 
 const weatherDescriprion =
       'The weather forecast for today is mostly sunny with a mild temperature drop. The high will be around 25°C and the low will be around 19°C. A slight chance of rain is expected in the afternoon';
+
+const List<String> weatherConditionEmojis = ['🌦', '🌧', '⛈', '⛅️', '☁️', '🌨', '☀️', '🌩'];

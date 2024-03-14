@@ -1,12 +1,12 @@
-import 'views/pages/main_page.dart';
+import 'views/pages/main_screen.dart';
 import 'package:flutter/material.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: Scaffold(body: MainPage()));
+        debugShowCheckedModeBanner: false, home: Scaffold(body: MainScreen()));
   }
 }

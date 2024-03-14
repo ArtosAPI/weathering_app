@@ -16,10 +16,9 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     });
 
     on<FetchWeather>((event, emit) async {
+      emit(WeatherLoading());
       final WeatherFactory wf = WeatherFactory(API_KEY);
-      final List<Weather> weather =
-          await wf.fiveDayForecastByLocation(event.latitude, event.longitude);
-      emit(WeatherFetched(weather));
+      await wf.fiveDayForecastByLocation(event.latitude, event.longitude).then((value) => emit(WeatherFetched(value)));
     });
   }
 }

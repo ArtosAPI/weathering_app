@@ -12,6 +12,32 @@ class WeekWeather extends StatelessWidget {
 
   final List<Weather> weekWeather;
 
+  int dayForecast(int hour)
+  {
+    switch(hour)
+    {
+      case <= 2 && >= 0:
+        return 1;
+      case <= 5 && > 2:
+        return 2;
+      case <= 8 && > 5:
+        return 3;
+      case <= 12 && > 8:
+        return 4;
+      case <= 15 && > 12:
+        return 5;
+      case <= 18 && > 15:
+        return 6;
+      case <= 21 && > 18:
+        return 7;
+      case <= 24 && > 21:
+        return 8;
+
+      default:
+        return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,19 +54,19 @@ class WeekWeather extends StatelessWidget {
                 style: _defTextStyle,
               )),
           DailyForecast(
-            dayWeather: weekWeather[4],
+            dayWeather: weekWeather[7]
           ),
           DailyForecast(
-            dayWeather: weekWeather[12],
+            dayWeather: weekWeather[15],
           ),
           DailyForecast(
-            dayWeather: weekWeather[20],
+            dayWeather: weekWeather[23],
           ),
           DailyForecast(
-            dayWeather: weekWeather[28],
+            dayWeather: weekWeather[31],
           ),
           DailyForecast(
-            dayWeather: weekWeather[36],
+            dayWeather: weekWeather[39],
           ),
           const Gap(16),
         ],
@@ -98,7 +124,7 @@ class DailyForecast extends StatelessWidget {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black38, width: 3),
                 borderRadius: BorderRadius.circular(50)),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             alignment: Alignment.center,
             child: Column(
               children: [

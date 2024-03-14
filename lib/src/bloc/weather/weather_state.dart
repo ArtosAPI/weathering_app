@@ -5,14 +5,14 @@ sealed class WeatherState {}
 
 final class WeatherInitial extends WeatherState {}
 
-class LocationFetched extends WeatherState
-{
+class LocationFetched extends WeatherState {
   LocationFetched(this.latitude, this.longitude);
   final double latitude, longitude;
 }
 
-class WeatherFetched extends WeatherState
-{
+class WeatherFetched extends WeatherState {
   WeatherFetched(this.weather);
   final List<Weather> weather;
 }
+
+class WeatherLoading extends WeatherState {}
