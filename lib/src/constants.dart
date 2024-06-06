@@ -1,7 +1,8 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
-const API_KEY = 'b2c5701873d4ef4129e96535c72d9c25';
+// ignore: constant_identifier_names
+const api_key = 'b2c5701873d4ef4129e96535c72d9c25';
 
 const List<IconData> weatherIcons = [
   FluentIcons.weather_rain_20_filled,
@@ -35,8 +36,5 @@ const TextStyle defTextStyle = TextStyle(
   fontWeight: FontWeight.w600,
   color: Colors.black,
 );
-
-const weatherDescriprion =
-      'The weather forecast for today is mostly sunny with a mild temperature drop. The high will be around 25°C and the low will be around 19°C. A slight chance of rain is expected in the afternoon';
 
 const List<String> weatherConditionEmojis = ['🌦', '🌧', '⛈', '⛅️', '☁️', '🌨', '☀️', '🌩'];

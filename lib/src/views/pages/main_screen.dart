@@ -55,55 +55,71 @@ class MainScreen extends StatelessWidget {
                         height: 525,
                       ),
                     ),
-                    ListView(children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 15, left: 20, right: 20),
-                        child: TopBar(
-                          dayTime: currentDayTime(),
-                          weather: weather,
+                    RefreshIndicator(
+                      onRefresh: () {
+                        context.read<WeatherBloc>().add(FetchLocation());
+                        return Future.delayed(const Duration(seconds: 0));
+                      },
+                      child: ListView(children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 15, left: 20, right: 20),
+                          child: TopBar(
+                            dayTime: currentDayTime(),
+                            weather: weather,
+                          ),
                         ),
-                      ),
-                      const Gap(45),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Column(children: [
-                            Text(
-                              weather[0].areaName!,
-                              style: const TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
+                        const Gap(45),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(children: [
+                              Text(
+                                weather[0].areaName!,
+                                style: const TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '${weather[0].temperature!.celsius!.round()}°C',
-                              style: const TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 96,
-                                fontWeight: FontWeight.w800,
-                                height: 1,
+                              Text(
+                                '${weather[0].temperature!.celsius!.round()}°C',
+                                style: const TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 96,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1,
+                                ),
                               ),
-                            ),
-                            Text(
-                              weather[0].weatherDescription!,
-                              style: const TextStyle(
-                                fontFamily: 'Rubik',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                              Text(
+                                weather[0].weatherDescription!,
+                                style: const TextStyle(
+                                  fontFamily: 'Rubik',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            const Gap(40),
-                            AtmosCondition(
-                              currWindSpeed: weather[0].windSpeed!,
-                              currHumidity: '${weather[0].humidity}%',
-                              currPressure: weather[0].pressure.toString(),
-                            ),
-                            const Gap(25),
-                            WeekWeather(weekWeather: weather),
-                          ]))
-                    ])
+                              const Gap(40),
+                              AtmosCondition(
+                                currWindSpeed: weather[0].windSpeed!,
+                                currHumidity: '${weather[0].humidity}%',
+                                currPressure: weather[0].pressure.toString(),
+                              ),
+                              const Gap(25),
+                              WeekWeather(weekWeather: weather),
+                            ]))
+                      ]),
+                    )
                   ]));
+            } else if (state is LocationFetchError) {
+              return RefreshIndicator(
+                onRefresh: () {
+                  context.read<WeatherBloc>().add(FetchLocation());
+                  return Future.delayed(const Duration(seconds: 1));
+                },
+                child: ListView(
+                  children: [const LoadingScreen(), Text(state.errorMessage, textAlign: TextAlign.center,)],
+                ),
+              );
             }
             return const LoadingScreen();
           },

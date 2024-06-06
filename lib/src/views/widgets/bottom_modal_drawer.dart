@@ -128,6 +128,23 @@ class BottomModalDrawer extends StatelessWidget {
                       },
                     ),
                     const Divider(),
+                    //Future plans may be? :)
+                    // const Gap(16),
+                    // Container(
+                    //   padding: const EdgeInsets.all(12),
+                    //   decoration: const BoxDecoration(
+                    //       borderRadius: BorderRadius.all(Radius.circular(12)),
+                    //       gradient: LinearGradient(
+                    //         begin: Alignment.topCenter,
+                    //         end: Alignment.bottomCenter,
+                    //         colors: [
+                    //           Color.fromRGBO(204, 225, 253, 1),
+                    //           Color.fromRGBO(177, 195, 219, 1),
+                    //         ],
+                    //       )),
+                    //   child: Text(
+                    //       '${curWeather.weatherDescription!} with a mild temperature drop. The high will be around 25°C and the low will be around 19°C. A slight chance of rain is expected in the afternoon'),
+                    // ),
                     const Gap(16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,7 +188,7 @@ class BottomModalDrawer extends StatelessWidget {
                           height: 36,
                           child: Container(
                             constraints:
-                                BoxConstraints(maxHeight: 100, maxWidth: 200),
+                                const BoxConstraints(maxHeight: 100, maxWidth: 200),
                             decoration: BoxDecoration(border: Border.all()),
                             child: PopupMenuButton(
                               initialValue: currentCharDataShown,
@@ -211,22 +228,6 @@ class BottomModalDrawer extends StatelessWidget {
                     ),
                     const Gap(16),
                     chartType(currentCharDataShown),
-                    const Gap(16),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color.fromRGBO(204, 225, 253, 1),
-                              Color.fromRGBO(250, 251, 254, 1),
-                            ],
-                          )),
-                      child: const Text(weatherDescriprion),
-                    ),
-                    const Gap(16),
                   ]);
                 },
               );
